@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: adea-monitor
+  labels:
+    app: adea
+    release: prometheus-3.2.0.windows-amd64  # Adjust according to your Prometheus Operator installation
+spec:
+  selector:
+    matchLabels:
+      app: adea
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s
+    scrapeTimeout: 10s
+    honorLabels: true

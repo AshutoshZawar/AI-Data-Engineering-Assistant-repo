@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adea-api
+  labels:
+    app: adea
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: adea
+  template:
+    metadata:
+      labels:
+        app: adea
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "5000"
+    spec:
+      containers:
+      - name: adea-api
+        image: adea-minimal:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+        env:
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: adea-secrets
+              key: openai-api-key
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: adea-secrets
+              key: mongodb-uri
+        - name: REDIS_HOST
+          value: "adea-redis"
+        - name: REDIS_PORT
+          value: "6379"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adea-api
+  labels:
+    app: adea
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5000
+    targetPort: 5000
+    protocol: TCP
+    name: http
+  selector:
+    app: adea
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: adea-secrets
+type: Opaque
+data:
+  openai-api-key: dGVzdC1rZXk=
+  mongodb-uri: bW9uZ29kYjovL2xvY2FsaG9zdDoyNzAxNy8=  # mongodb://localhost:27017/

@@ -1,0 +1,44 @@
+openai
+rich
+scikit-learn
+pandas
+numpy
+boto3
+pymongo
+slack_sdk
+apache-airflow
+prefect
+docker
+flask
+prometheus_client
+grafana-api
+python-dotenv
+Flask-JWT-Extended
+cryptography
+locust
+redis
+pyyaml
+
+
+# # Create directories
+# mkdir -p k8s grafana
+
+# # Build Docker image
+# docker build -t adea:latest .
+
+# # Start Minikube
+# minikube start
+
+# # Deploy to Kubernetes
+# kubectl apply -f k8s/deployment.yaml
+# kubectl apply -f k8s/redis.yaml
+# kubectl apply -f k8s/hpa.yaml
+
+# # Install metrics-server for HPA
+# kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+# # Check deployments
+# kubectl get pods
+
+# # Access the API
+# kubectl port-forward svc/adea-api 5000:5000

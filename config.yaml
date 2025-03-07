@@ -1,0 +1,5 @@
+#openai_api_key: "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"
+#slack_token: "xoxb-8459661191543-8486841050401-HlfFOE5hamwN0fWOAgEcwXer"
+mongodb_uri: "mongodb://localhost:27017/"
+data_storage: "s3://ai-data-engineering-logs"
+log_level: "INFO"
